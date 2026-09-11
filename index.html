@@ -24,7 +24,7 @@ const itemsEl=document.getElementById('items'), rejectsEl=document.getElementByI
 let production=[];
 const uid=()=>Math.random().toString(36).slice(2,9);
 function makeProduction(name=''){const id=uid();production.push({id,name});renderProduction();return id}
-function renderProduction(){itemsEl.innerHTML=production.map((x,i)=>`<div class="row"><input class="p-name" data-id="${x.id}" value="${esc(x.name)}" placeholder="Nama item"><input class="p-qty" data-id="${x.id}" type="number" min="0" value="0" placeholder="Jumlah"><button class="btn small-danger" onclick="removeProduction('${x.id}')">×</button></div>`).join('')}
+function renderProduction(){itemsEl.innerHTML=production.map((x,i)=>`<div class="row"><input class="p-name" data-id="${x.id}" value="${esc(x.name)}" placeholder="Nama item"><input class="p-qty" data-id="${x.id}" type="number" min="0" value=" " placeholder="Jumlah"><button class="btn small-danger" onclick="removeProduction('${x.id}')">×</button></div>`).join('')}
 function addProductionItem(){makeProduction('Item Baru');saveDraft()}
 function removeProduction(id){if(production.length<=1)return;if(!confirm('Hapus item ini?'))return;production=production.filter(x=>x.id!==id);renderProduction();refreshRejectOptions();saveDraft()}
 function syncProduction(){document.querySelectorAll('.p-name').forEach(e=>{const x=production.find(a=>a.id===e.dataset.id);if(x)x.name=e.value.trim()||'Item Baru'});refreshRejectOptions()}
