@@ -19,7 +19,7 @@
 <div class="card"><h3>Hasil Laporan</h3><div id="report" class="report">Belum ada laporan.</div></div>
 </div><div id="toast" class="toast">Tersalin!</div>
 <script>
-const defaultNames=['Woody','Forky','Lilypad','Buzz','Bullseye','Jessie'];
+const defaultNames=['Woody','Forky','Lilypad','Buzz','Bullseye','Jessie', 'Tech Trio'];
 const itemsEl=document.getElementById('items'), rejectsEl=document.getElementById('rejects');
 let production=[];
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -35,7 +35,7 @@ const pad=n=>String(n).padStart(2,'0');function today(){const d=new Date();retur
 function fmtDate(v){if(!v)return '';const [y,m,d]=v.split('-');return `${d}-${m}-${y}`}function val(id){return document.getElementById(id)?.value||'0'}
 function generate(){syncProduction();const lines=[];document.querySelectorAll('.row').forEach(r=>{const n=r.querySelector('.p-name').value.trim();const q=Number(r.querySelector('.p-qty').value||0);if(n&&q>0)lines.push(`     • ${n} : ${q.toLocaleString('id-ID')}`)});if(!lines.length)lines.push('     • - : ');
 let r=`*LAPORAN UV*\n\nTanggal : *${fmtDate(val('date'))}*\nShift : ${val('shift')}\nOrang/Jam : ${val('people')} orang ${val('hours')} jam\n\n*Hasil Produksi*\n${lines.join('\n')}`;
-const afkir=[];document.querySelectorAll('.reject-row').forEach(row=>{const sel=row.querySelector('.reject-select'),q=Number(row.querySelector('.reject-qty').value||0);if(sel.value&&q>0){const x=production.find(a=>a.id===sel.value);afkir.push(`${x?.name||'Item'} ${q.toLocaleString('id-ID')} QC`)}});r+=`\nAfkir: ${afkir.length?afkir.join(', '):' '}`;const note=document.getElementById('note').value.trim();if(note)r+=`\n\nNB: - ${note}`;document.getElementById('report').textContent=r;saveDraft()}
+const afkir=[];document.querySelectorAll('.reject-row').forEach(row=>{const sel=row.querySelector('.reject-select'),q=Number(row.querySelector('.reject-qty').value||0);if(sel.value&&q>0){const x=production.find(a=>a.id===sel.value);afkir.push(`${x?.name||'Item'} ${q.toLocaleString('id-ID')} `)}});r+=`\nAfkir: ${afkir.length?afkir.join(', '):' '}`;const note=document.getElementById('note').value.trim();if(note)r+=`\n\nNB: - ${note}`;document.getElementById('report').textContent=r;saveDraft()}
 function copyReport(){generate();const text=document.getElementById('report').textContent;navigator.clipboard?.writeText(text).then(()=>toast('Laporan tersalin!')).catch(()=>{const t=document.createElement('textarea');t.value=text;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();toast('Laporan tersalin!')})}
 function toast(t){const x=document.getElementById('toast');x.textContent=t;x.style.display='block';setTimeout(()=>x.style.display='none',1500)}
 function saveDraft(){syncProductionNoLoop();const d={date:val('date'),shift:val('shift'),people:val('people'),hours:val('hours'),note:document.getElementById('note').value,production, rejects:[...document.querySelectorAll('.reject-row')].map(r=>({id:r.querySelector('.reject-select').value,qty:r.querySelector('.reject-qty').value}))};localStorage.setItem('uvData',JSON.stringify(d))}
